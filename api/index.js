@@ -20,7 +20,7 @@ mongoose.connect(uri).then(() => console.log("Connected to MongoDB!"));
 
 //Middleware
 //Built-in
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "../views"));
 //Third Party
@@ -190,4 +190,3 @@ app.use("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server berjalan di http://localhost:${port}`);
 });
-module.exports = app;
