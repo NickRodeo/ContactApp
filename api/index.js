@@ -20,7 +20,7 @@ mongoose.connect(uri).then(() => console.log("Connected to MongoDB!"));
 
 //Middlewares
 //Built-in
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "../views"));
 //Third Party
