@@ -181,11 +181,12 @@ app.get("/contact/:nama", async (req, res) => {
 });
 
 //Error URL
-app.use("/", (req, res) => {
+app.use("/", (req, res, next) => {
   res.render("error", {
     title: "error",
     layout: "layouts/error",
   });
+  next();
 });
 
 module.exports = app;
