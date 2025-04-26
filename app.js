@@ -13,32 +13,10 @@ const { body, check, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const { Contact } = require("./models/contact");
 
-//caching
 const uri =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/belajar_mongo";
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-
-async function connectToDatabase() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(uri).then((mongoose) => {
-      return mongoose;
-    });
-  }
-  cached.conn = await cached.promise;
-  return cached.conn;
-}
-
-connectToDatabase()
-  .then(() => console.log("Connected to MongoDB!"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+mongoose.connect(uri).then(() => console.log("Connected to MongoDB!"));
 
 //Middleware
 //Built-in
@@ -48,11 +26,14 @@ app.set("views", path.join(__dirname, "views"));
 //Third Party
 app.use(expressLayouts);
 app.set("view engine", "ejs");
+const MongoStore = require("connect-mongo");
+
 app.use(
   session({
     secret: "secret",
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   })
 );
 app.use(flash());
@@ -205,6 +186,15 @@ app.use("/", (req, res) => {
     title: "error",
     layout: "layouts/error",
   });
+});
+
+// Add timeout middleware to prevent hanging requests
+const timeout = require("connect-timeout");
+
+app.use(timeout("10s"));
+
+app.use((req, res, next) => {
+  if (!req.timedout) next();
 });
 
 module.exports = app;
