@@ -1,0 +1,68 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <div class="card shadow-lg border-0">
+      <div class="card-body">
+        <h4 class="card-title text-center mb-4">Tambah Kontak Baru</h4>
+        <% if (errors.length > 0) { %>
+        <div class="alert alert-danger">
+          <ul>
+            <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+            <% }) %>
+          </ul>
+        </div>
+        <% } %>
+        <form action="/contact" method="POST">
+          <div class="mb-3">
+            <label for="nama" class="form-label">Nama Lengkap</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nama"
+              name="nama"
+              placeholder="Masukkan nama"
+              value="<%= typeof oldVal ? oldVal.nama : '' %>"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="nohp" class="form-label">Nomor HP</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nohp"
+              name="nohp"
+              placeholder="08xxxxxxxxxx"
+              value="<%= oldVal ? oldVal.nohp : '' %>"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Alamat Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="nama@email.com"
+              value="<%= oldVal ? oldVal.email : '' %>"
+              required
+            />
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              Simpan Kontak
+            </button>
+          </div>
+        </form>
+
+        <div class="text-center mt-3">
+          <a href="/contact" class="btn btn-link">Kembali ke Daftar Kontak</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
