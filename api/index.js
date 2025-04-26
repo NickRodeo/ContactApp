@@ -18,7 +18,7 @@ const uri =
 
 mongoose.connect(uri).then(() => console.log("Connected to MongoDB!"));
 
-//Middleware
+//Middlewares
 //Built-in
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
