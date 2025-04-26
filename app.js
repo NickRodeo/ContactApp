@@ -13,6 +13,7 @@ const { body, check, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const { Contact } = require("./models/contact");
 
+//caching
 const uri =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/belajar_mongo";
 
