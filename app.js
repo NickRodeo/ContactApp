@@ -10,15 +10,34 @@ const session = require("express-session");
 const flash = require("connect-flash");
 //validation
 const { body, check, validationResult } = require("express-validator");
-//MongoDB
 const mongoose = require("mongoose");
-//Model
 const { Contact } = require("./models/contact");
 
-//Connect Database
 const uri =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/belajar_mongo";
-mongoose.connect(uri).then(() => console.log("Connected to MongoDB!"));
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectToDatabase() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(uri).then((mongoose) => {
+      return mongoose;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
+
+connectToDatabase()
+  .then(() => console.log("Connected to MongoDB!"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 //Middleware
 //Built-in
@@ -180,13 +199,11 @@ app.get("/contact/:nama", async (req, res) => {
   });
 });
 
-//Error URL
-app.use("/", (req, res, next) => {
+app.use("/", (req, res) => {
   res.render("error", {
     title: "error",
     layout: "layouts/error",
   });
-  next();
 });
 
 module.exports = app;
